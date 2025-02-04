@@ -2,7 +2,7 @@
  * Copyright (c) 2022 EdgeImpulse Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
+ * You may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  * http://www.apache.org/licenses/LICENSE-2.0
  *
@@ -23,9 +23,9 @@
 #define MAX_ACCEPTED_RANGE  2.0f
 
 // Definición de pines del LED RGB
-#define LED_R 22
-#define LED_G 23
-#define LED_B 24
+#define LEDR 22
+#define LEDG 23
+#define LEDB 24
 
 /* Private variables ------------------------------------------------------- */
 static bool debug_nn = false;
@@ -36,9 +36,9 @@ void setup()
     while (!Serial);
     Serial.println("Edge Impulse Inferencing Demo");
 
-    pinMode(LED_R, OUTPUT);
-    pinMode(LED_G, OUTPUT);
-    pinMode(LED_B, OUTPUT);
+    pinMode(LEDR, OUTPUT);
+    pinMode(LEDG, OUTPUT);
+    pinMode(LEDB, OUTPUT);
     
     if (!IMU.begin()) {
         ei_printf("Failed to initialize IMU!\r\n");
@@ -53,10 +53,10 @@ void setup()
     }
 }
 
-void setLEDColor(int r, int g, int b) {
-    analogWrite(LED_R, r);
-    analogWrite(LED_G, g);
-    analogWrite(LED_B, b);
+void setLEDColor(bool r, bool g, bool b) {
+    digitalWrite(LEDR, r);
+    digitalWrite(LEDG, g);
+    digitalWrite(LEDB, b);
 }
 
 void loop()
@@ -104,18 +104,18 @@ void loop()
         ei_printf("    %s: %.5f\n", result.classification[ix].label, result.classification[ix].value);
         
         if (result.classification[ix].value > 0.80) {
-            if (strcmp(result.classification[ix].label, "Roll_Positive") == 0) {
-                setLEDColor(255, 0, 0); // Rojo
-            } else if (strcmp(result.classification[ix].label, "Roll_Negative") == 0) {
-                setLEDColor(255, 0, 255); // Rosa
-            } else if (strcmp(result.classification[ix].label, "Pitch_Positive") == 0) {
-                setLEDColor(0, 255, 0); // Verde
-            } else if (strcmp(result.classification[ix].label, "Pitch_Negative") == 0) {
-                setLEDColor(255, 255, 0); // Amarillo
-            } else if (strcmp(result.classification[ix].label, "Yaw_Positive") == 0) {
-                setLEDColor(0, 0, 255); // Azul
-            } else if (strcmp(result.classification[ix].label, "Yaw_Negative") == 0) {
-                setLEDColor(128, 0, 128); // Morado
+            if (strcmp(result.classification[ix].label, "roll positive") == 0) {
+                setLEDColor(LOW, HIGH, HIGH); // Rojo
+            } else if (strcmp(result.classification[ix].label, "roll negative") == 0) {
+                setLEDColor(LOW, HIGH, LOW); // Rosa
+            } else if (strcmp(result.classification[ix].label, "pitch positive") == 0) {
+                setLEDColor(HIGH, LOW, HIGH); // Verde
+            } else if (strcmp(result.classification[ix].label, "pitch negative") == 0) {
+                setLEDColor(LOW, LOW, HIGH); // Amarillo
+            } else if (strcmp(result.classification[ix].label, "yaw positive") == 0) {
+                setLEDColor(HIGH, HIGH, LOW); // Azul
+            } else if (strcmp(result.classification[ix].label, "yaw negative") == 0) {
+                setLEDColor(HIGH, LOW, LOW); // Morado
             }
         }
     }
